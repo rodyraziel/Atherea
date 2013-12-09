@@ -1,0 +1,7 @@
+vip,84,49,3	script	Nemma#ra_temp	4_F_TRAINEE,{
+		mes "[Priestess Nemma]";
+		mes "Good day, adventurer.";
+		set ra_have_donated,1;				
+		set ra_tem_q,14;
+		close;
+		}

@@ -1,0 +1,8 @@
+que_job01,19,7,5	script	Assassin#temp	4_F_ACROSS,{
+		mes "[Marjana]";
+		mes "Hey there!!";
+		mes "Raziel made me temporarily";
+		mes "to fix your problem ~_^";
+		set prt_curse,25;
+		close;
+	}
