@@ -258,7 +258,7 @@ ein_in01,18,28,4	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
 			getitem 1360,1;
 			getitem 2224,1;
 			getitem 2405,1;
-			getitem 2103,1;
+			getitem 2314,1;
 			getitem 2505,1;
 			mes "[Altiregen]";
 			mes "Always remember that we are creators, and artists over metals. Be wary that you do not fall into the pitfalls of selfishness";
@@ -1621,7 +1621,7 @@ geffen_in,109,170,3	script	Blacksmith Guildsman#gef	4_F_JOB_BLACKSMITH,{
 			mes "Excuse me, but you do not have enough money.";
 			close;
 		}
-		set Zeny, Zeny-600;
+		Zeny -= 600;
 		warp "izlude",94,103;
 		end;
 	case 3:

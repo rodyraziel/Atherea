@@ -133,11 +133,11 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 		completequest 8008;
 		callfunc "Job_Change",Job_Assassin;
 		callfunc "F_ClearJobVar";		// clears all job variables for the current player
-		getitem 2154,1;
+		getitem 1254,1;
 		getitem 2335,1;
 		getitem 2505,1;
 		getitem 2405,1;
-		getitem 2218,1;
+		getitem 2224,1;
 		mes "[Assassin Expert 'Huey']";
 		mes "Now! Do your best to be a great Assassin! Travel with faith and kill with dignity. Come by anytime and pay us a visit. Once again, congratulations.";
 		close;
@@ -1260,7 +1260,7 @@ OnReset:
 	donpcevent "Standby Room#ASNTEST::OnStart";
 	end;
 
-OnResetmob:
+OnResetMob:
 	killmonster "in_moc_16","Beholder#ASNTEST::OnMyMobDead";
 	killmonster "in_moc_16","Beholder#ASNTEST::OnMyMobDead2";
 	stopnpctimer;
@@ -1274,7 +1274,7 @@ OnMyMobDead:
 		changequest 8003,8004;
 		donpcevent "timestopper#1::OnEnable";
 		donpcevent "Keeper of the Door#ASN::OnEnable";
-		donpcevent "Beholder#ASNTEST::OnResetmob";
+		donpcevent "Beholder#ASNTEST::OnResetMob";
 		set .DisableTraps,1;
 		stopnpctimer;
 	}
@@ -1359,7 +1359,7 @@ OnTouch:
 		mapannounce "in_moc_16",strcharinfo(0) + ", you're trapped. You will be sent back.",bc_map;
 		set ASSIN_Q,2;
 		warp "in_moc_16",19,161;
-		donpcevent "Beholder#ASNTEST::OnResetmob";
+		donpcevent "Beholder#ASNTEST::OnResetMob";
 		donpcevent "Standby Room#ASNTEST::OnStart";
 	}
 	end;
