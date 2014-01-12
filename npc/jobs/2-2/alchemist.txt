@@ -175,7 +175,7 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 					mes "Come back to me when you have 50,000 Zeny, otherwise we can't process your application.";
 					close;
 				}
-				set Zeny, Zeny-50000;
+				Zeny -= 50000;
 				mes "[Parmy Gianino]";
 				mes "Let's see.";
 				mes "" + strcharinfo(0);
@@ -1701,7 +1701,8 @@ alde_alche,101,184,4	script	Master Alchemist#am	2_M_DYEINGER,{
 		getitem 2505,1;
 		getitem 2103,1;
 		getitem 1123,1;
-		getitem 2332,1;
+		getitem 2314,1;
+		getitem 2230,1;
 		mes "[Vincent Carsciallo]";
 		mes "Henceforth, you are";
 		mes "now a member of our";

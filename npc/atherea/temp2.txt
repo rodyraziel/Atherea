@@ -1,8 +1,9 @@
-que_job01,19,7,5	script	Assassin#temp	4_F_ACROSS,{
-		mes "[Marjana]";
-		mes "Hey there!!";
-		mes "Raziel made me temporarily";
-		mes "to fix your problem ~_^";
-		set prt_curse,25;
-		close;
+vip,84,49,3	script	temporary#temp	4_F_TRAINEE,{
+			mes "This is now yours to keep.";
+			mes "Thank you for giving me the";
+			mes "honor of working on a worthy";
+			mes "smithing challenge.";
+			set sign_q,141;
+			getitem 2644,1; //The_Sign_
+			close;
 	}

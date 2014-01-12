@@ -14,7 +14,6 @@ market,102,112,3	script	Exit#vend	726,{
 
 prontera	mapflag	novending
 market	mapflag	autotrade
-//market	mapflag	vending_cell
 market	mapflag	nopenalty
 market	mapflag	noteleport
 market	mapflag	nobranch

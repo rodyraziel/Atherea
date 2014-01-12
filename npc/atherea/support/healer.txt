@@ -64,7 +64,7 @@
 //============================================================
 alberta,25,240,6	duplicate(Healer)	Healer#alb	971
 aldebaran,135,118,6	duplicate(Healer)	Healer#alde	971
-amatsu,124,97,4	duplicate(Healer)	Healer#ama	971
+amatsu,108,160,4	duplicate(Healer)	Healer#ama	971
 ayothaya,207,169,6	duplicate(Healer)	Healer#ayo	971
 comodo,184,158,6	duplicate(Healer)	Healer#com	971
 einbech,57,36,6	duplicate(Healer)	Healer#einbe	971
@@ -94,7 +94,7 @@ yuno,160,187,4	duplicate(Healer)	Healer#yuno	971
 
 // Duplicates (Renewal)
 //============================================================
-brasilis,194,221,6	duplicate(Healer)	Healer#bra	971
+brasilis,191,222,5	duplicate(Healer)	Healer#bra	971
 dewata,195,187,4	duplicate(Healer)	Healer#dew	971
 dicastes01,201,194,4	duplicate(Healer)	Healer#dic	971
 ecl_in01,45,60,4	duplicate(Healer)	Healer#ecl	971

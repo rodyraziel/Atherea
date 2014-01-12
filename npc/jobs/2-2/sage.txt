@@ -163,7 +163,8 @@ yuno_in02,38,61,5	script	Dean of the Academy#sa	2_M_SAGE_OLD,{
 			getitem 2503,1;
 			getitem 2239,1;
 			getitem 2252,1;
-			getitem 1610,1;
+			getitem 1619,1;
+			getitem 2101,1;
 			getitem 2309,1;
 			mes "[Kayron Grik]";
 			mes "Congratulations! You have now become a Sage.";
@@ -349,7 +350,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 				next;
 				if (select("Pay 70,000 zeny.:Give him Old Magicbook and Necklace of Wisdom.") == 1) {
 					if (Zeny > 69999) {
-						set Zeny, Zeny-70000;
+						Zeny -= 70000;
 						mes "[Metheus Sylphe]";
 						mes "Thank you, your application has been accepted.";
 						mes "Next, you will take an entrance test.";
@@ -521,7 +522,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 			next;
 		}
 		else if (Zeny > 69999) {
-			set Zeny, Zeny-70000;
+			Zeny -= 70000;
 			mes "[Metheus Sylphe]";
 			mes "Well done. Let me proceed with your application request.";
 			set SAGE_Q,4;
@@ -551,7 +552,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 				if (Zeny > 29999) {
 					for (set .@i, 0; .@i < .@size ; set .@i, .@i+1)
 						delitem .@item[.@i], .@count[.@i];  
-					set Zeny, Zeny-30000;
+					Zeny -= 30000;
 					mes "[Metheus Sylphe]";
 					mes "Well done. Let me proceed with your application request.";
 					set .@SAGE_Q_T,SAGE_Q;

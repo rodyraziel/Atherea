@@ -41,24 +41,36 @@ prontera,155,177,0	script	mazeevent	45,2,2,{
 			close;
 			end;
 	}
+	
+	if (gethominfo(2) != "null"){
+		mes "No homunculus is allowed in this event! Sorry "+strcharinfo(0)+" but you can't join this event!";
+		close;
+		end;
+	}
+	if (getpetinfo(2) != "null"){
+		mes "No pet is allowed in this event! Sorry "+strcharinfo(0)+" but you can't join this event!";
+		close;
+		end;
+	}
+	if (checkcart()){
+		mes "No cart is allowed! Sorry "+strcharinfo(0)+" but you can't join this event!";
+		close;
+		end;
+	}
+	if (checkfalcon()){
+		mes "No falcon is allowed! Sorry "+strcharinfo(0)+" but you can't join this event!";
+		close;
+		end;
+	}
 
-	// Remove Peco / Cart
-	atcommand strcharinfo(0)+":@option 0 0 0";
-
+	if (checkriding()){
+		mes "No riding pecopeco is allowed! Sorry "+strcharinfo(0)+" but you have to unmount it.";
+		close;
+		end;
+	}
 
 	// Remove Any Speed Buffs
-	sc_end SC_SPEEDUP0;
-	sc_end SC_SPEEDUP1;
-	sc_end SC_INCREASEAGI;
-	sc_end SC_WINDWALK;
-	sc_end SC_CARTBOOST;
-	sc_end SC_CLOAKING;
-	sc_end SC_BERSERK;
-	sc_end SC_RUN;
-	sc_end SC_AVOID;
-
-	// Grant 5 Minute Walking Speed Increase
-	sc_start SC_INCREASEAGI,300000,1;
+	sc_end SC_ALL;
 
 
 	// Warp to Event
@@ -108,9 +120,9 @@ OnClock1300:
 OnClock1700:
 OnClock2100:
 
-        announce2 "Maze: A maze event will begin in 2 minutes in Prontera.",17,0x99FFCC;
+        announce "Maze: A maze event will begin in 2 minutes in Prontera.",0;
         sleep2 90000;
-        announce2 "Maze: Enter the Warp in Prontera to join the Maze event.",17,0x99FFCC;
+        announce "Maze: Enter the Warp in Prontera to join the Maze event.",0;
 
         // Clear up the map.
         areawarp "force_1-3",104,18,189,10,"prontera",156,184;
@@ -124,17 +136,17 @@ OnClock2100:
         end;
 
 OnTimer30000:
-        mapannounce "prontera","Maze: Last 30 seconds.",0,0x99FFCC;
+        announce "Maze: Last 30 seconds.",0;
         sleep2 5000;
-        mapannounce "prontera","Maze: If you want to join please enter the Warp Portal.",0,0x99FFCC;
+        mapannounce "prontera","Maze: If you want to join please enter the Warp Portal.",0;
         end;
 
 OnTimer50000:
-        mapannounce "prontera","Maze: Last 10 seconds.",0,0x99FFCC;
+        mapannounce "prontera","Maze: Last 10 seconds.",0;
         end;
 
 OnTimer60000:
-        mapannounce "prontera","Maze: Time's up.",0,0x99FFCC;
+        mapannounce "prontera","Maze: Time's up.",0;
         end;
 
 OnTimer61000:
@@ -251,7 +263,7 @@ L_NotEnough:
 	set .@win_chance, (getmapusers("force_1-3")*23);
 	if ( rand(1,.@win_chance) == .@win_chance ) {
 		warp "force_1-3",100,184;
-		announce2 "Maze: "+strcharinfo(0)+" has solved the maze event!",14,0x99FFCC;
+		announce "Maze: "+strcharinfo(0)+" has solved the maze event!",14,0x99FFCC;
 		disablenpc "mz_portal#1";
 		disablenpc "mz_portal#2";
 		disablenpc "mz_portal#3";
@@ -366,4 +378,3 @@ force_1-3	mapflag	nosave	SavePoint
 force_1-3	mapflag	noskill
 force_1-3	mapflag	noteleport
 force_1-3	mapflag	nowarpto
-force_1-3	mapflag	restricted	3

@@ -289,6 +289,8 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 		getitem 2107,1;
 		getitem 2230,1;
 		getitem 2341,1;
+		getitem 2505,1;
+		getitem 2411,1;
 		mes "[Michael Halig]";
 		mes "Behold...!";
 		mes "You are now a Crusader!";

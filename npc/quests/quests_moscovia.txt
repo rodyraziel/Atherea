@@ -257,12 +257,9 @@ moscovia,135,52,0	script	Bulletin Board#npc	2_BULLETIN_BOARD,{
 	mes "depart when the tide is low.";
 	next;
 	mes "[Charabel Schedule]";
-	mes "The Charabel can depart";
-	mes "between the following times:";
-	mes "^0000FF12:00am PST^000000 to ^0000FF3:00am PST";
-	mes "^0000FF6:00am PST^000000 to ^0000FF9:00am PST";
-	mes "^0000FF12:00pm PST^000000 to ^0000FF3:00pm PST";
-	mes "^0000FF6:00pm PST^000000 to ^0000FF9:00pm PST";
+	mes "You're in luck since the";
+	mes "Charabel departs around this";
+	mes "time so you better hurry.";
 	close;
 }
 
@@ -750,29 +747,16 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 		set mos_whale_edq,19;
 		close;
 	}
-	if ((gettime(3) >= 0 && gettime(3) < 3) || (gettime(3) >= 6 && gettime(3) < 9) || (gettime(3) >= 12 && gettime(3) < 15) || (gettime(3) >= 18 && gettime(3) < 21))  {
-		mes "[Mr. Ibanoff]";
-		mes "Hmm. It's not a bad time.";
-		mes "We should hurry up";
-		mes "while the tides are low.";
-		mes "The ship is prepared already";
-		mes "at a dock nearby, so we can depart";
-		mes "right away.";
-		close2;
-		warp "mosk_ship",94,110;
-		end;
-	}
 	mes "[Mr. Ibanoff]";
-	mes "Gee. The tide is too high.";
-	mes "It's too dangerous to depart";
-	mes "right now because of the waves";
-	mes "getting too rugged.";
-	next;
-	mes "[Mr. Ibanoff]";
-	mes "When the sea calmes down a bit,";
-	mes "you can come back. We can't depart";
-	mes "right now.";
-	close;
+	mes "Hmm. It's not a bad time.";
+	mes "We should hurry up";
+	mes "while the tides are low.";
+	mes "The ship is prepared already";
+	mes "at a dock nearby, so we can depart";
+	mes "right away.";
+	close2;
+	warp "mosk_ship",94,110;
+	end;
 }
 
 //----------------------------------------------------------------------------

@@ -127,10 +127,10 @@ menu	"Prontera",T1, "Alberta",T2, "Aldebaran",T3, "Amatsu",T4, "Ayothaya",T5,
 T1: Go("prontera",155,183);
 T2: Go("alberta",28,234);
 T3: Go("aldebaran",140,131);
-T4: Go("amatsu",198,84);
+T4: Go("amatsu",115,160);
 T5: Go("ayothaya",208,166);
 T6: Go("brasilis",196,217);
-T7: Go("comodo",209,143);
+T7: Go("comodo",190,151);
 T8: Go("dewata",200,180);
 T9: Go("ecl_in01",48,53);
 T10: Go("einbech",63,35);
@@ -165,7 +165,7 @@ T34: Go("yuno",157,51);
 menu "Last Warp ^777777["+lastwarp$+"]^000000",-, (abyss_01?"^000000":"^ff0000")+"Abyss Lakes",D1, (ama_dun01?"^000000":"^ff0000")+"Amatsu Dungeon",D2, (anthell01?"^000000":"^ff0000")+"Anthell",D3,
 	(ayo_dun01?"^000000":"^ff0000")+"Ayothaya Dungeon",D4, (beach_dun?"^000000":"^ff0000")+"Beach Dungeon",D5, (lhz_dun01?"^000000":"^ff0000")+"Bio Labs",D6,
 	(bra_dun01?"^000000":"^ff0000")+"Brasilis Dungeon",D7, (iz_dun00?"^000000":"^ff0000")+"Byalan Dungeon",D8, (c_tower1?"^000000":"^ff0000")+"Clock Tower",D9,
-	(mjo_dun01?"^000000":"^ff0000")+"Coal Mines",D10, (prt_sewb1?"^000000":"^ff0000")+"Culvert",D11, (abbey01?"^000000":"^ff0000")+"Cursed Abbey",D12, (dew_dun01?"^000000":"^ff0000")+"Dewata Dungeon",D13,
+	(mjo_dun01?"^000000":"^ff0000")+"Coal Mines",D10, (prt_sewb1?"^000000":"^ff0000")+"Culvert",D11, (abbey01?"^000000":"^ff0000")+"Cursed Abbey",D12, (dew_dun02?"^000000":"^ff0000")+"Dewata Dungeon",D13,
 	(ein_dun01?"^000000":"^ff0000")+"Einbroch Dungeon",D14, (gefenia01?"^000000":"^ff0000")+"Gefenia",D15, (gef_dun00?"^000000":"^ff0000")+"Geffen Dungeon",D16,
 	(glast_01?"^000000":"^ff0000")+"Glast Heim",D17, (gon_dun01?"^000000":"^ff0000")+"Gonryun Dungeon",D18, (prt_maze01?"^000000":"^ff0000")+"Hidden Dungeon",D19,
 	(ice_dun01?"^000000":"^ff0000")+"Ice Dungeon",D20, (jupe_cave?"^000000":"^ff0000")+"Juperos",D21, (kh_dun01?"^000000":"^ff0000")+"Kiel Dungeon",D22, (lou_dun01?"^000000":"^ff0000")+"Louyang Dungeon",D23,
@@ -233,7 +233,7 @@ D6: if(lhz_dun01){
 		end;
 	}
 	goto L_Lock;
-D7: if(bra_dun){
+D7: if(bra_dun01){
 		if (Zeny < 1500) goto L_nope;
 		set Zeny,Zeny-1500;
 		warp "bra_in01",207,184;
@@ -281,7 +281,7 @@ D12: if(abbey01){
 		end;
 	}
 	goto L_Lock;
-D13: if(dew_dun01){
+D13: if(dew_dun02){
 		if (Zeny < 1500) goto L_nope;
 		set Zeny,Zeny-1500;
 		warp "dew_fild01",50,65;
@@ -528,7 +528,7 @@ close;
 alb2trea,57,70,6	duplicate(Warper)	Warper#tre	859
 alberta,28,240,4	duplicate(Warper)	Warper#alb	859
 aldebaran,145,118,4	duplicate(Warper)	Warper#alde	859
-amatsu,124,93,4	duplicate(Warper)	Warper#ama	859
+amatsu,108,156,5	duplicate(Warper)	Warper#ama	859
 ayothaya,209,169,6	duplicate(Warper)	Warper#ayo	859
 comodo,194,158,4	duplicate(Warper)	Warper#com	859
 einbech,59,38,6	duplicate(Warper)	Warper#einbe	859
@@ -566,13 +566,13 @@ yuno,155,187,4	duplicate(Warper)	Warper#yuno	859
 // --------------------------------------------------
 //	Duplicates (Renewal):
 // --------------------------------------------------
-brasilis,201,222,4	duplicate(Warper)	Warper#bra	4_F_VALKYRIE
-dewata,204,186,6	duplicate(Warper)	Warper#dew	4_F_VALKYRIE
-dicastes01,194,194,6	duplicate(Warper)	Warper#dic	4_F_VALKYRIE
-ecl_in01,51,60,4	duplicate(Warper)	Warper#ecl	4_F_VALKYRIE
-malangdo,134,117,6	duplicate(Warper)	Warper#mal	4_F_VALKYRIE
-malaya,210,205,4	duplicate(Warper)	Warper#ma	4_F_VALKYRIE
-mora,57,152,4	duplicate(Warper)	Warper#mora	4_F_VALKYRIE
+brasilis,194,221,5	duplicate(Warper)	Warper#bra	859
+dewata,198,184,5	duplicate(Warper)	Warper#dew	859
+dicastes01,194,194,6	duplicate(Warper)	Warper#dic	859
+ecl_in01,51,60,4	duplicate(Warper)	Warper#ecl	859
+malangdo,134,117,6	duplicate(Warper)	Warper#mal	859
+malaya,210,205,4	duplicate(Warper)	Warper#ma	859
+mora,57,152,4	duplicate(Warper)	Warper#mora	859
 
 -	script	Unlocker	-1,{
 set .@unlock,getd (""+strnpcinfo(2)+"");

@@ -29,7 +29,6 @@ pvp_n_3-4	mapflag	pvp
 pvp_n_3-4	mapflag	nogo
 pvp_n_3-4	mapflag	noteleport
 pvp_n_3-4	mapflag	pvp_noguild
-pvp_n_3-4	mapflag	restricted	3
 pvp_n_3-4	mapflag	nocommand	50
 pvp_n_3-4	mapflag	noreturn
 pvp_n_3-4	mapflag	noskill

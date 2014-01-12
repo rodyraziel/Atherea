@@ -16,92 +16,92 @@ OnPCLoginEvent:
 	sleep2 1000+(.Rest*60000);	// Invoke the minimum delay after the event, keeping the RID
 	
 	// Determine the amount of hours currently running for the given point in time.
-	@i = (gettime(7)*365*24)+	// The amount of hours for the current date
+	.i = (gettime(7)*365*24)+	// The amount of hours for the current date
 		 (gettime(8)*24)+		// The amount of hours for the current day
 		 gettime(3);			// The current hour.
 		
-	@g = getarraysize(.Rewards);
+	.g = getarraysize(.Rewards);
 	
 	// If more time has passed then the minimum wait time after the last reward that given
 	// out, we will determine the next reward to be given out. Otherwise we do nothing.
-	if(@i >= (#LastDailyReward + @minWait)){
+	if(.i >= (#LastDailyReward + .minWait)){
 	
 		// If we have not exceeded the maximum wait, increase the daily reward counter
 		// by 1. If we have exceeded the maximum wait, reset it to 1.
-		if(@i < #LastDailyReward + @maxWait)
+		if(.i < #LastDailyReward + .maxWait)
 			#DRewardCon++;
 		else
 			#DRewardCon = 1;
 			
 		// Determine the rewards to be handed out for the player based on the current daily reward
-		if((#DRewardCon * 2) > (@g - 1)){
-			@p = .Rewards[@g - 2];
-			@q = .Rewards[@g - 1];
+		if((#DRewardCon * 2) > (.g - 1)){
+			.p = .Rewards[.g - 2];
+			.q = .Rewards[.g - 1];
 		} else {
-			@p = .Rewards[(#DRewardCon * 2) - 2];
-			@q = .Rewards[(#DRewardCon * 2) - 1];
+			.p = .Rewards[(#DRewardCon * 2) - 2];
+			.q = .Rewards[(#DRewardCon * 2) - 1];
 		}
 		
 		// Check if we can grant the first reward
-		if((@Mode & 1) && @p){
+		if((.Mode & 1) && .p){
 			// check if the user is not overweight. Hold the script if the user is overweight.
 			// Otherwise give him the determined item for his reward.
-			if(!checkweight(@p,@q)) {
+			if(!checkweight(.p,.q)) {
 				message strcharinfo(0), "You seem to be overweight, put some stuff away and relog to claim your prize";
 				end;
 			} else {
-				getitem @p,@q;
-				message strcharinfo(0), "You have been granted: "+@q+" "+getitemname(@p)+"";
+				getitem .p,.q;
+				message strcharinfo(0), "You have been granted: "+.q+" "+getitemname(.p)+"";
 			}
 		}
 		
 		// Determine the points from the multiplier reward
-		if(@Mode&2) @A = #DRewardCon * @ZMulti;
+		if(.Mode&2) .A = #DRewardCon * .ZMulti;
 		
 		// Determine the the points from the item granted.
-		if(@Mode&8) @A = @A + @q;
+		if(.Mode&8) .A = .A + .q;
 		
 		// Determine the zeny reward
-		if(@Mode&2 || @Mode&8){
-			setd .PointType$,getd(.PointType$)+.@A;
-			message strcharinfo(0), "You have been granted "+.@A+" "+.PointType$+"";
+		if(.Mode&2 || .Mode&8){
+			setd .PointType$,getd(.PointType$)+.A;
+			message strcharinfo(0), "You have been granted "+.A+" "+.PointType$+"";
 		}
 		
 		// Determine the multiplier
-		if(@Mode&4){
-		 	@B = #DRewardCon *.XPMulti[0];
-		 	@C = #DRewardCon*.XPMulti[1];
+		if(.Mode&4){
+		 	.B = #DRewardCon *.XPMulti[0];
+		 	.C = #DRewardCon*.XPMulti[1];
 		}
 		
-		if(@Mode&16){
-		 	@B = @B+.@q;
-			@C = @C+.@q;
+		if(.Mode&16){
+		 	.B = .B+.q;
+			.C = .C+.q;
 		}
 		
-		if(@Mode&4 || @Mode&16) getexp @B,@C;
+		if(.Mode&4 || .Mode&16) getexp .B,.C;
 		
-		if(@Mode&32){
-			for(set .@x,0; .@x < getarraysize(.BuffInfo); set .@x,.@x+4){
-				if(#DRewardCon % .BuffInfo[.@x+1] == 0) sc_start .BuffInfo[.@x], .BuffInfo[.@x+2]*60000, .BuffInfo[.@x+3];
+		if(.Mode&32){
+			for(set .x,0; .x < getarraysize(.BuffInfo); set .x,.x+4){
+				if(#DRewardCon % .BuffInfo[.x+1] == 0) sc_start .BuffInfo[.x], .BuffInfo[.x+2]*60000, .BuffInfo[.x+3];
 			}
 		}
 		
-		message strcharinfo(0), "You have collected your daily reward, for "+#DRewardCon+" day"+((DRewardCon>1)?"s":"")+" in a row.";
-		set #LastDailyReward,.@i;
+		message strcharinfo(0), "You have collected your daily reward, for "+#DRewardCon+" day"+((#DRewardCon>1)?"s":"")+" in a row.";
+		set #LastDailyReward,.i;
 	} else {
-		message strcharinfo(0), "You have "+(#LastDailyReward + .MinWait-.@i)+" hours till your next reward";
+		message strcharinfo(0), "You have "+(#LastDailyReward + .MinWait-.i)+" hours till your next reward";
 	}
 end;
 
 // This is triggered when the script is properly loaded. We will use this configuration section
 // to actually configure the proper rewards and set up the timers to perform the sanity checks.
 OnInit:
-	@minWait = 22;			// minimum amount of hours between "day" cycles
-	@maxWait = 50;			// maximum amount of hours between "day" cycles
-	@rest = 0;				// minimum amount of minutes to wait between login and grant
-	@PointType$ = "Zeny";	// The currency being used.
-	@Mode = 1+2+4+8+16+32:	// The binary mask to determine the reward.
-	@ZMulti = 100;			// The multiplier for the "zeny" reward to be handed out.
+	.minWait = 22;			// minimum amount of hours between "day" cycles
+	.maxWait = 50;			// maximum amount of hours between "day" cycles
+	.rest = 0;				// minimum amount of minutes to wait between login and grant
+	.pointType$ = "Zeny";	// The currency being used.
+	.Mode = 1+2+4+8+16+32:	// The binary mask to determine the reward.
+	.ZMulti = 100;			// The multiplier for the "zeny" reward to be handed out.
 	
 	//Consecutive Day Exp Multiplier
 	//  <Base Exp>,<Job Exp>;
@@ -134,7 +134,7 @@ OnInit:
 				,198,15,30,10	// +10% Hp for 60 Mins Every 10th Day
 				,199,15,30,10	// +10% Sp for 60 Mins Every 10th Day
 				,200,10,30,10	// +10% Atk for 30 Mins Every 10th Day
-				,201,10,30,10	// +10% Matk for 30 Mins Every 10th Day
+				,201,10,30,10;	// +10% Matk for 30 Mins Every 10th Day
 
 	// Daily Prize items (max 64 days):
 	//   <itemID>,<amount>, // Day 1

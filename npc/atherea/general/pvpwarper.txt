@@ -6,12 +6,12 @@ prontera.gat,167,187,3	script	Arena Warper	459,{
 	mes "Do you want to test your combat skills?";
 	mes "Choose the mode you wish to enter:";
 	next;
-	switch(select("PvP Arena ["+getmapusers("warcage")+"/100]:GvG Arena ["+getmapusers("guild_vs4")+"/100]")) {
+	switch(select("PvP Arena ["+getmapusers("pvp_n_1-5")+"/100]:GvG Arena ["+getmapusers("guild_vs4")+"/100]")) {
 
 	case 1:	// No debuff PVP Square
-		if (getmapusers("warcage") > 99) callsub S_full;
+		if (getmapusers("pvp_n_1-5") > 99) callsub S_full;
 		callsub S_payment;
-		warp "warcage",38,60;
+		warp "pvp_n_1-5",0,0;
 		end;
 
 	case 2:	// GvG Room
@@ -36,8 +36,8 @@ S_payment:
 OnInit:
 	OnTimer5000:
 	delwaitingroom;
-	if(getmapusers("warcage") >= getmapusers("guild_vs4")){
-		waitingroom getmapusers("warcage")+" player"+( getmapusers("warcage") > 1 ? "s are":" is") +" in the PvP Room", 0;
+	if(getmapusers("pvp_n_1-5") >= getmapusers("guild_vs4")){
+		waitingroom getmapusers("pvp_n_1-5")+" player"+( getmapusers("pvp_n_1-5") > 1 ? "s are":" is") +" in the PvP Room", 0;
 		goto Timer;
 		end;
 	}
@@ -60,7 +60,7 @@ OnClock0000:
 	case 4:	// Thursday
 	case 5:	// Friday
 	case 6: // Saturday
-		set .pvp_square$, "warcage";
+		set .pvp_square$, "pvp_n_1-5";
 		break;
 	}
  
@@ -68,11 +68,11 @@ OnClock0000:
  
 moscovia.gat,229,188,4	duplicate(Arena Warper)	Arena Warper#1	459
 //askydun.gat,96,113,3	duplicate(Arena Warper)	Arena Warper#2	459 // Kliwa //Czel: This map doesn't exist yet. I'm cleaning error logs at the moment.
-alberta.gat,118,62,4	duplicate(Arena Warper)	Arena Warper#3	459 // Kliwa
+alberta.gat,36,240,4	duplicate(Arena Warper)	Arena Warper#3	459 // Kliwa
 aldebaran.gat,147,113,1	duplicate(Arena Warper)	Arena Warper#4	459 // Kliwa
 amatsu.gat,123,164,3	duplicate(Arena Warper)	Arena Warper#5	459 // Kliwa
-ayothaya.gat,155,121,4	duplicate(Arena Warper)	Arena Warper#6	459 // Kliwa
-comodo.gat,215,146,4	duplicate(Arena Warper)	Arena Warper#7	459 // Kliwa
+ayothaya.gat,201,169,4	duplicate(Arena Warper)	Arena Warper#6	459 // Kliwa
+comodo.gat,199,147,4	duplicate(Arena Warper)	Arena Warper#7	459 // Kliwa
 einbech.gat,86,109,4	duplicate(Arena Warper)	Arena Warper#8	459 // Taas Kaliwa
 einbroch.gat,174,172,5	duplicate(Arena Warper)	Arena Warper#9	459 // Taas Kaliwa
 geffen.gat,125,67,4	duplicate(Arena Warper)	Arena Warper#10	459
@@ -96,8 +96,9 @@ manuk.gat,282,216,4	duplicate(Arena Warper)	Arena Warper#27	459
 brasilis.gat,202,218,3	duplicate(Arena Warper)	Arena Warper#28	459
 dicastes01,187,182,6	duplicate(Arena Warper)	Arena Warper#29	459
 jawaii,200,295,4	duplicate(Arena Warper)	Arena Warper#30	459
+dewata.gat,205,186,4	duplicate(Arena Warper)	Arena Warper#31	459 // Kliwa
  
-warcage,49,63,3	script	Galus#pvp	459,{
+pvp_n_1-5,97,119,4	script	Galus#pvp	459,{
 
 	mes "[Broadcaster]";
 	mes "What do you want to do?";
@@ -151,12 +152,21 @@ guild_vs4.gat,46,73,5	script	Galus#gvg	459,{
 }
 
 // Mapflags
-warcage	mapflag	pvp
-warcage	mapflag	nowarpto
-warcage	mapflag	noteleport
-warcage	mapflag	noreturn
+pvp_n_1-5	mapflag	pvp
+pvp_n_1-5	mapflag	nowarpto
+pvp_n_1-5	mapflag	noteleport
+pvp_n_1-5	mapflag	noreturn
+pvp_n_1-5	mapflag	nomemo
+pvp_n_1-5	mapflag	nobranch
+pvp_n_1-5	mapflag	nosave
+pvp_n_1-5	mapflag	novending
+pvp_n_1-5	mapflag	nopenalty
 
-guild_vs4	mapflag	pvp
 guild_vs4	mapflag	nowarpto
 guild_vs4	mapflag	noteleport
 guild_vs4	mapflag	noreturn
+guild_vs4	mapflag	nomemo
+guild_vs4	mapflag	nobranch
+guild_vs4	mapflag	nosave
+guild_vs4	mapflag	novending
+guild_vs4	mapflag	nopenalty

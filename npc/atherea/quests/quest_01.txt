@@ -152,7 +152,7 @@ noreason:
 
 // === The Legend of Satan Morroc ===
 
-morocc,222,265,5	script	Crusader	751,{
+morocc,222,265,5	script	Crusader#custom	751,{
 	
 	if(satanquest==2){
 		mes "[Hil]";
@@ -344,7 +344,7 @@ if (orcquest==2){
 
 // === Create the Solution ===
 
-alde_alche,150,11,3	script	Alchemist	805,{
+alde_alche,150,11,3	script	Alchemist#custom	805,{
 
 if (solutionquest==2) {
 		mes "[Robin]";
