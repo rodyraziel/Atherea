@@ -1746,10 +1746,8 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		hide_flag &= ~OPTION_HIDE;
 	else {
 		switch ( skill_id ) {
-			case LG_OVERBRAND:
-			case LG_OVERBRAND_BRANDISH:
-			case LG_OVERBRAND_PLUSATK:
-				hide_flag &=~ OPTION_CLOAK|OPTION_CHASEWALK;
+			case MO_ABSORBSPIRITS: // it works when already casted and target suddenly hides.
+				hide_flag &= ~OPTION_HIDE;
 				break;
 		}
 	}
@@ -2071,9 +2069,9 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 		struct status_data *masterstatus = status->get_base_status(mbl);
 		if ( masterstatus ) {
 			if( battle_config.slaves_inherit_speed&(masterstatus->mode&MD_CANMOVE?1:2) )
-				masterstatus->speed = masterstatus->speed;
-			if( masterstatus->speed < 2 ) /* minimum for the unit to function properly */
-				masterstatus->speed = 2;
+				mstatus->speed = masterstatus->speed;
+			if( mstatus->speed < 2 ) /* minimum for the unit to function properly */
+				mstatus->speed = 2;
 		}
 	}
 
@@ -4832,6 +4830,8 @@ defType status_calc_def(struct block_list *bl, struct status_change *sc, int def
 			def -= def * 5 * (10-sc->data[SC_CAMOUFLAGE]->val4) / 100;
 		if( sc && sc->data[SC_GENTLETOUCH_REVITALIZE] && sc->data[SC_GENTLETOUCH_REVITALIZE]->val4 )
 			def += 2 * sc->data[SC_GENTLETOUCH_REVITALIZE]->val4;
+		if( sc->data[SC_FORCEOFVANGUARD] )
+			def += def * 2 * sc->data[SC_FORCEOFVANGUARD]->val1 / 100;
 		return (defType)cap_value(def,DEFTYPE_MIN,DEFTYPE_MAX);
 	}
 
@@ -4882,8 +4882,6 @@ defType status_calc_def(struct block_list *bl, struct status_change *sc, int def
 		def -= def * (sc->data[SC_FLING]->val2)/100;
 	if( sc->data[SC_ANALYZE] )
 		def -= def * ( 14 * sc->data[SC_ANALYZE]->val1 ) / 100;
-	if( sc->data[SC_FORCEOFVANGUARD] )
-		def += def * 2 * sc->data[SC_FORCEOFVANGUARD]->val1 / 100;
 	if(sc->data[SC_SATURDAY_NIGHT_FEVER])
 		def -= def * (10 + 10 * sc->data[SC_SATURDAY_NIGHT_FEVER]->val1) / 100;
 	if(sc->data[SC_EARTHDRIVE])
@@ -6059,6 +6057,8 @@ void status_set_viewdata(struct block_list *bl, int class_)
 					if( sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette )
 						sd->vd.cloth_color = 0;
 					if( sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette )
+						sd->vd.cloth_color = 0;
+					if( sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */ )
 						sd->vd.cloth_color = 0;
 				}
 			} else if (vd)
@@ -7463,6 +7463,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			case SC_XMAS:
 			case SC_SUMMER:
 			case SC_HANBOK:
+			case SC_OKTOBERFEST:
 				if (!vd) return 0;
 				//Store previous values as they could be removed.
 				unit->stop_attack(bl);
@@ -8403,11 +8404,10 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				val4 = tick/10000;
 				tick_time = 10000; // [GodLesZ] tick time
 				break;
-			case SC_FORCEOFVANGUARD: // This is not the official way to handle it but I think we should use it. [pakpil]
-				val2 = 20 + 12 * (val1 - 1); // Chance
-				val3 = 5 + (2 * val1); // Max rage counters
+			case SC_FORCEOFVANGUARD:
+				val2 = 8 + 12 * val1; // Chance
+				val3 = 5 + 2 * val1; // Max rage counters
 				tick = -1; //endless duration in the client
-				tick_time = 6000; // [GodLesZ] tick time
 				break;
 			case SC_EXEEDBREAK:
 				val1 *= 150; // 150 * skill_lv
@@ -8680,6 +8680,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			case SC_XMAS:
 			case SC_SUMMER:
 			case SC_HANBOK:
+			case SC_OKTOBERFEST:
 				if( !vd ) break;
 				clif->changelook(bl,LOOK_BASE,vd->class_);
 				clif->changelook(bl,LOOK_WEAPON,0);
@@ -9067,6 +9068,10 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		case SC_FUSION:
 			sc->option |= OPTION_FLYING;
 			break;
+		case SC_OKTOBERFEST:
+			sc->option |= OPTION_OKTOBERFEST;
+			opt_flag |= 0x4;
+			break;
 		default:
 			opt_flag = 0;
 	}
@@ -9257,6 +9262,7 @@ int status_change_clear(struct block_list* bl, int type) {
 	sc->opt2 = 0;
 	sc->opt3 = 0;
 	sc->bs_counter = 0;
+	sc->fv_counter = 0;
 #ifndef RENEWAL
 	sc->sg_counter = 0;
 #endif
@@ -9768,167 +9774,171 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 
 	opt_flag = 1;
 	switch(type){
-	case SC_STONE:
-	case SC_FREEZE:
-	case SC_STUN:
-	case SC_SLEEP:
-	case SC_DEEP_SLEEP:
-	case SC_BURNING:
-	case SC_WHITEIMPRISON:
-	case SC_COLD:
-		sc->opt1 = 0;
-		break;
+		case SC_STONE:
+		case SC_FREEZE:
+		case SC_STUN:
+		case SC_SLEEP:
+		case SC_DEEP_SLEEP:
+		case SC_BURNING:
+		case SC_WHITEIMPRISON:
+		case SC_COLD:
+			sc->opt1 = 0;
+			break;
 
-	case SC_POISON:
-	case SC_CURSE:
-	case SC_SILENCE:
-	case SC_BLIND:
-		sc->opt2 &= ~(1<<(type-SC_POISON));
-		break;
-	case SC_DPOISON:
-		sc->opt2 &= ~OPT2_DPOISON;
-		break;
-	case SC_CRUCIS:
-		sc->opt2 &= ~OPT2_SIGNUMCRUCIS;
-		break;
+		case SC_POISON:
+		case SC_CURSE:
+		case SC_SILENCE:
+		case SC_BLIND:
+			sc->opt2 &= ~(1<<(type-SC_POISON));
+			break;
+		case SC_DPOISON:
+			sc->opt2 &= ~OPT2_DPOISON;
+			break;
+		case SC_CRUCIS:
+			sc->opt2 &= ~OPT2_SIGNUMCRUCIS;
+			break;
 
-	case SC_HIDING:
-		sc->option &= ~OPTION_HIDE;
-		opt_flag|= 2|4; //Check for warp trigger + AoE trigger
-		break;
-	case SC_CLOAKING:
-	case SC_CLOAKINGEXCEED:
-	case SC__INVISIBILITY:
-		sc->option &= ~OPTION_CLOAK;
-	case SC_CAMOUFLAGE:
-		opt_flag|= 2;
-		break;
-	case SC_CHASEWALK:
-		sc->option &= ~(OPTION_CHASEWALK|OPTION_CLOAK);
-		opt_flag|= 2;
-		break;
-	case SC_SIGHT:
-		sc->option &= ~OPTION_SIGHT;
-		break;
-	case SC_WEDDING:
-		sc->option &= ~OPTION_WEDDING;
-		opt_flag |= 0x4;
-		break;
-	case SC_XMAS:
-		sc->option &= ~OPTION_XMAS;
-		opt_flag |= 0x4;
-		break;
-	case SC_SUMMER:
-		sc->option &= ~OPTION_SUMMER;
-		opt_flag |= 0x4;
-		break;
-	case SC_HANBOK:
-		sc->option &= ~OPTION_HANBOK;
-		opt_flag |= 0x4;
-		break;
-	case SC_ORCISH:
-		sc->option &= ~OPTION_ORCISH;
-		break;
-	case SC_RUWACH:
-		sc->option &= ~OPTION_RUWACH;
-		break;
-	case SC_FUSION:
-		sc->option &= ~OPTION_FLYING;
-		break;
-		//opt3
-	case SC_TWOHANDQUICKEN:
-	case SC_ONEHANDQUICKEN:
-	case SC_SPEARQUICKEN:
-	case SC_CONCENTRATION:
-	case SC_MER_QUICKEN:
-		sc->opt3 &= ~OPT3_QUICKEN;
-		opt_flag = 0;
-		break;
-	case SC_OVERTHRUST:
-	case SC_OVERTHRUSTMAX:
-	case SC_SWOO:
-		sc->opt3 &= ~OPT3_OVERTHRUST;
-		if( type == SC_SWOO )
-			opt_flag = 8;
-		else
-			opt_flag = 0;
-		break;
-	case SC_ENERGYCOAT:
-	case SC_SKE:
-		sc->opt3 &= ~OPT3_ENERGYCOAT;
-		opt_flag = 0;
-		break;
-	case SC_INCATKRATE: //Simulated Explosion spirits effect.
-		if (bl->type != BL_MOB)
-		{
+		case SC_HIDING:
+			sc->option &= ~OPTION_HIDE;
+			opt_flag|= 2|4; //Check for warp trigger + AoE trigger
+			break;
+		case SC_CLOAKING:
+		case SC_CLOAKINGEXCEED:
+		case SC__INVISIBILITY:
+			sc->option &= ~OPTION_CLOAK;
+		case SC_CAMOUFLAGE:
+			opt_flag|= 2;
+			break;
+		case SC_CHASEWALK:
+			sc->option &= ~(OPTION_CHASEWALK|OPTION_CLOAK);
+			opt_flag|= 2;
+			break;
+		case SC_SIGHT:
+			sc->option &= ~OPTION_SIGHT;
+			break;
+		case SC_WEDDING:
+			sc->option &= ~OPTION_WEDDING;
+			opt_flag |= 0x4;
+			break;
+		case SC_XMAS:
+			sc->option &= ~OPTION_XMAS;
+			opt_flag |= 0x4;
+			break;
+		case SC_SUMMER:
+			sc->option &= ~OPTION_SUMMER;
+			opt_flag |= 0x4;
+			break;
+		case SC_HANBOK:
+			sc->option &= ~OPTION_HANBOK;
+			opt_flag |= 0x4;
+			break;
+		case SC_OKTOBERFEST:
+			sc->option &= ~OPTION_OKTOBERFEST;
+			opt_flag |= 0x4;
+			break;
+		case SC_ORCISH:
+			sc->option &= ~OPTION_ORCISH;
+			break;
+		case SC_RUWACH:
+			sc->option &= ~OPTION_RUWACH;
+			break;
+		case SC_FUSION:
+			sc->option &= ~OPTION_FLYING;
+			break;
+			//opt3
+		case SC_TWOHANDQUICKEN:
+		case SC_ONEHANDQUICKEN:
+		case SC_SPEARQUICKEN:
+		case SC_CONCENTRATION:
+		case SC_MER_QUICKEN:
+			sc->opt3 &= ~OPT3_QUICKEN;
 			opt_flag = 0;
 			break;
-		}
-	case SC_EXPLOSIONSPIRITS:
-		sc->opt3 &= ~OPT3_EXPLOSIONSPIRITS;
-		opt_flag = 0;
-		break;
-	case SC_STEELBODY:
-	case SC_SKA:
-		sc->opt3 &= ~OPT3_STEELBODY;
-		opt_flag = 0;
-		break;
-	case SC_BLADESTOP:
-		sc->opt3 &= ~OPT3_BLADESTOP;
-		opt_flag = 0;
-		break;
-	case SC_AURABLADE:
-		sc->opt3 &= ~OPT3_AURABLADE;
-		opt_flag = 0;
-		break;
-	case SC_BERSERK:
-		opt_flag = 0;
-		sc->opt3 &= ~OPT3_BERSERK;
-		break;
-		//	case ???: // doesn't seem to do anything
-		//		sc->opt3 &= ~OPT3_LIGHTBLADE;
-		//		opt_flag = 0;
-		//		break;
-	case SC_DANCING:
-		if ((sce->val1&0xFFFF) == CG_MOONLIT)
-			sc->opt3 &= ~OPT3_MOONLIT;
-		opt_flag = 0;
-		break;
-	case SC_MARIONETTE:
-	case SC_MARIONETTE_MASTER:
-		sc->opt3 &= ~OPT3_MARIONETTE;
-		opt_flag = 0;
-		break;
-	case SC_ASSUMPTIO:
-		sc->opt3 &= ~OPT3_ASSUMPTIO;
-		opt_flag = 0;
-		break;
-	case SC_WARM: //SG skills [Komurka]
-		sc->opt3 &= ~OPT3_WARM;
-		opt_flag = 0;
-		break;
-	case SC_KAITE:
-		sc->opt3 &= ~OPT3_KAITE;
-		opt_flag = 0;
-		break;
-	case SC_NJ_BUNSINJYUTSU:
-		sc->opt3 &= ~OPT3_BUNSIN;
-		opt_flag = 0;
-		break;
-	case SC_SOULLINK:
-		sc->opt3 &= ~OPT3_SOULLINK;
-		opt_flag = 0;
-		break;
-	case SC_PROPERTYUNDEAD:
-		sc->opt3 &= ~OPT3_UNDEAD;
-		opt_flag = 0;
-		break;
-		//	case ???: // from DA_CONTRACT (looks like biolab mobs aura)
-		//		sc->opt3 &= ~OPT3_CONTRACT;
-		//		opt_flag = 0;
-		//		break;
-	default:
-		opt_flag = 0;
+		case SC_OVERTHRUST:
+		case SC_OVERTHRUSTMAX:
+		case SC_SWOO:
+			sc->opt3 &= ~OPT3_OVERTHRUST;
+			if( type == SC_SWOO )
+				opt_flag = 8;
+			else
+				opt_flag = 0;
+			break;
+		case SC_ENERGYCOAT:
+		case SC_SKE:
+			sc->opt3 &= ~OPT3_ENERGYCOAT;
+			opt_flag = 0;
+			break;
+		case SC_INCATKRATE: //Simulated Explosion spirits effect.
+			if (bl->type != BL_MOB)
+			{
+				opt_flag = 0;
+				break;
+			}
+		case SC_EXPLOSIONSPIRITS:
+			sc->opt3 &= ~OPT3_EXPLOSIONSPIRITS;
+			opt_flag = 0;
+			break;
+		case SC_STEELBODY:
+		case SC_SKA:
+			sc->opt3 &= ~OPT3_STEELBODY;
+			opt_flag = 0;
+			break;
+		case SC_BLADESTOP:
+			sc->opt3 &= ~OPT3_BLADESTOP;
+			opt_flag = 0;
+			break;
+		case SC_AURABLADE:
+			sc->opt3 &= ~OPT3_AURABLADE;
+			opt_flag = 0;
+			break;
+		case SC_BERSERK:
+			opt_flag = 0;
+			sc->opt3 &= ~OPT3_BERSERK;
+			break;
+			//	case ???: // doesn't seem to do anything
+			//		sc->opt3 &= ~OPT3_LIGHTBLADE;
+			//		opt_flag = 0;
+			//		break;
+		case SC_DANCING:
+			if ((sce->val1&0xFFFF) == CG_MOONLIT)
+				sc->opt3 &= ~OPT3_MOONLIT;
+			opt_flag = 0;
+			break;
+		case SC_MARIONETTE:
+		case SC_MARIONETTE_MASTER:
+			sc->opt3 &= ~OPT3_MARIONETTE;
+			opt_flag = 0;
+			break;
+		case SC_ASSUMPTIO:
+			sc->opt3 &= ~OPT3_ASSUMPTIO;
+			opt_flag = 0;
+			break;
+		case SC_WARM: //SG skills [Komurka]
+			sc->opt3 &= ~OPT3_WARM;
+			opt_flag = 0;
+			break;
+		case SC_KAITE:
+			sc->opt3 &= ~OPT3_KAITE;
+			opt_flag = 0;
+			break;
+		case SC_NJ_BUNSINJYUTSU:
+			sc->opt3 &= ~OPT3_BUNSIN;
+			opt_flag = 0;
+			break;
+		case SC_SOULLINK:
+			sc->opt3 &= ~OPT3_SOULLINK;
+			opt_flag = 0;
+			break;
+		case SC_PROPERTYUNDEAD:
+			sc->opt3 &= ~OPT3_UNDEAD;
+			opt_flag = 0;
+			break;
+			//	case ???: // from DA_CONTRACT (looks like biolab mobs aura)
+			//		sc->opt3 &= ~OPT3_CONTRACT;
+			//		opt_flag = 0;
+			//		break;
+		default:
+			opt_flag = 0;
 	}
 
 	if (calc_flag&SCB_DYE) { //Restore DYE color
@@ -10642,11 +10652,11 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			return 0;
 		}
 		break;
-
+		
 	case SC_FORCEOFVANGUARD:
-		if( !status->charge(bl,0,20) )
+		if( !status->charge(bl, 0, (24 - 4 * sce->val1)) )
 			break;
-		sc_timer_next(6000 + tick, status->change_timer, bl->id, data);
+		sc_timer_next(10000 + tick, status->change_timer, bl->id, data);
 		return 0;
 
 	case SC_BANDING:
