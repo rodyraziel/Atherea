@@ -115,49 +115,124 @@ function Restrict {
 // --------------------------------------------------
 	Towns:
 // --------------------------------------------------
-menu	"Prontera",T1, "Alberta",T2, "Aldebaran",T3, "Amatsu",T4, "Ayothaya",T5,
-	"Brasilis",T6, "Comodo",T7, "Dewata",T8, "Eclage",T9, "Einbech",T10, 
-	"Einbroch",T11, "El Dicastes",T12, "Geffen",T13, "Gonryun",T14, "Hugel",T15,
-	"Izlude",T16, "Jawaii",T17, "Lighthalzen",T18, "Louyang",T19, "Lutie",T20,
-	"Malangdo",T21, "Malaya",T22, "Manuk",T23, "Midgarts Expedition Camp",T24,
-	"Mora",T25, "Morroc",T26, "Moscovia",T27,
-	"Payon",T28, "Rachel",T29, "Splendide",T30, "Thor Camp",T31,
-	"Umbala",T32, "Veins",T33, "Yuno",T34;
+menu	"Last Warp ^777777["+.@lastMap$+"]^000000",-,"Prontera ^777777["+getmapusers("prontera")+"]^000000",T1, "Alberta ^777777["+getmapusers("alberta")+"]^000000",T2, "Aldebaran ^777777["+getmapusers("aldebaran")+"]^000000",T3, "Amatsu ^777777["+getmapusers("amatsu")+"]^000000",T4, "Ayothaya ^777777["+getmapusers("ayothaya")+"]^000000",T5,
+	"Brasilis ^777777["+getmapusers("brasilis")+"]^000000",T6, "Comodo ^777777["+getmapusers("comodo")+"]^000000",T7, "Dewata ^777777["+getmapusers("dewata")+"]^000000",T8, "Eclage ^777777["+getmapusers("ecl_in01")+"]^000000",T9, "Einbech ^777777["+getmapusers("einbech")+"]^000000",T10, 
+	"Einbroch ^777777["+getmapusers("einbroch")+"]^000000",T11, "El Dicastes ^777777["+getmapusers("dicastes01")+"]^000000",T12, "Geffen ^777777["+getmapusers("geffen")+"]^000000",T13, "Gonryun ^777777["+getmapusers("gonryun")+"]^000000",T14, "Hugel ^777777["+getmapusers("hugel")+"]^000000",T15,
+	"Izlude ^777777["+getmapusers("izlude")+"]^000000",T16, "Jawaii ^777777["+getmapusers("jawaii")+"]^000000",T17, "Lighthalzen ^777777["+getmapusers("lighthalzen")+"]^000000",T18, "Louyang ^777777["+getmapusers("louyang")+"]^000000",T19, "Lutie ^777777["+getmapusers("xmas")+"]^000000",T20,
+	"Malangdo ^777777["+getmapusers("malangdo")+"]^000000",T21, "Malaya ^777777["+getmapusers("malaya")+"]^000000",T22, "Manuk ^777777["+getmapusers("manuk")+"]^000000",T23, "Midgards Expedition Camp ^777777["+getmapusers("mid_camp")+"]^000000",T24,
+	"Mora ^777777["+getmapusers("mora")+"]^000000",T25, "Morroc ^777777["+getmapusers("morocc")+"]^000000",T26, "Moscovia ^777777["+getmapusers("moscovia")+"]^000000",T27,
+	"Payon ^777777["+getmapusers("payon")+"]^000000",T28, "Rachel ^777777["+getmapusers("rachel")+"]^000000",T29, "Splendide ^777777["+getmapusers("splendide")+"]^000000",T30, "Thor Camp ^777777["+getmapusers("thor_camp")+"]^000000",T31,
+	"Umbala ^777777["+getmapusers("umbala")+"]^000000",T32, "Veins ^777777["+getmapusers("veins")+"]^000000",T33, "Yuno ^777777["+getmapusers("yuno")+"]^000000",T34;
+	
+	if (lastTwarp$ == "")
+		message strcharinfo(0),"You haven't warped anywhere yet.";
+	else
+		warp lastTwarp$,lastTwarpx,lastTwarpy;
 
-T1: Go("prontera",155,183);
-T2: Go("alberta",28,234);
-T3: Go("aldebaran",140,131);
-T4: Go("amatsu",115,160);
-T5: Go("ayothaya",208,166);
-T6: Go("brasilis",196,217);
-T7: Go("comodo",190,151);
-T8: Go("dewata",200,180);
-T9: Go("ecl_in01",48,53);
-T10: Go("einbech",63,35);
-T11: Go("einbroch",240,201);
-T12: Go("dicastes01",198,187);
-T13: Go("geffen",119,59);
-T14: Go("gonryun",160,120);
-T15: Go("hugel",96,145);
-T16: Go("izlude",128,114);
-T17: Go("jawaii",251,132);
-T18: Go("lighthalzen",158,92);
-T19: Go("louyang",217,100);
-T20: Go("xmas",147,134);
-T21: Go("malangdo",140,114);
-T22: Go("malaya",212,206);
-T23: Go("manuk",282,138);
-T24: Go("mid_camp",210,288);
-T25: Go("mora",55,146);
-T26: Go("morocc",156,93);
-T27: Go("moscovia",223,184);
-T28: Go("payon",179,100);
-T29: Go("rachel",130,110);
-T30: Go("splendide",201,147);
-T31: Go("thor_camp",246,68);
-T32: Go("umbala",97,153);
-T33: Go("veins",216,123);
-T34: Go("yuno",157,51);
+	close;
+
+T1: warp "prontera",155,183;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T2: warp "alberta",28,234;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T3: warp "aldebaran",140,131;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T4: warp "amatsu",115,160;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T5: warp "ayothaya",208,166;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T6: warp "brasilis",196,217;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T7: warp "comodo",190,151;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T8: warp "dewata",200,180;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T9: warp "ecl_in01",48,53;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T10: warp "einbech",63,35;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T11: warp "einbroch",240,201;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T12: warp "dicastes01",198,187;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T13: warp "geffen",119,59;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T14: warp "gonryun",160,120;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T15: warp "hugel",96,145;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T16: warp "izlude",128,114;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T17: warp "jawaii",251,132;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T18: warp "lighthalzen",158,92;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T19: warp "louyang",217,100;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T20: warp "xmas",147,134;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T21: warp "malangdo",140,114;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T22: warp "malaya",212,206;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T23: warp "manuk",282,138;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T24: warp "mid_camp",210,288;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);	
+	end;
+T25: warp "mora",55,146;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T26: warp "morocc",156,93;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T27: warp "moscovia",223,184;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T28: warp "payon",179,100;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T29: warp "rachel",130,110;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T30: warp "splendide",201,147;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T31: warp "thor_camp",246,68;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T32: warp "umbala",97,153;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T33: warp "veins",216,123;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
+T34: warp "yuno",157,51;
+	getmapxy(lastTwarp$,lastTwarpx,lastTwarpy,0);
+	end;
 
 // --------------------------------------------------
 	Dungeons:
